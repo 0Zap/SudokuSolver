@@ -3,15 +3,21 @@ import java.util.HashMap;
 
 public class SudokuBoard {
     private int[][] board;
+    private ArrayList<Integer> openSpotsIndices;
     HashMap<Integer, ArrayList<Integer>> indexInfo;
 
     public SudokuBoard(int info) {
         this.board = generateBoard(info);
         this.indexInfo = generateIndexInfo();
+        this.openSpotsIndices = getOpenSpots();
     }
 
     public int[][] getBoard() {
         return board;
+    }
+
+    public ArrayList<Integer> getOpenSpotsIndices() {
+        return openSpotsIndices;
     }
 
     public HashMap<Integer, ArrayList<Integer>> getIndexInfo() {
@@ -38,6 +44,21 @@ public class SudokuBoard {
         }
 
         return indexInfo;
+    }
+
+    private ArrayList<Integer> getOpenSpots(){
+        ArrayList<Integer> emptySpots = new ArrayList<>();
+
+        for (int row = 0; row <= 8 ; row++) {
+            for (int col = 0; col <=8 ; col++) {
+                int value = this.board[row][col];
+                if (value == 0){
+                    emptySpots.add((row * 9 + col));
+                }
+
+            }
+        }
+        return emptySpots;
     }
 
     private int[][] generateBoard(int info) {
