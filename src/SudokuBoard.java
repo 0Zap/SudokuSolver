@@ -6,8 +6,8 @@ public class SudokuBoard {
     private ArrayList<Integer> openSpotsIndices;
     HashMap<Integer, ArrayList<Integer>> indexInfo;
 
-    public SudokuBoard(int info) {
-        this.board = generateBoard(info);
+    public SudokuBoard() {
+        this.board = generateBoard(0);
         this.indexInfo = generateIndexInfo();
         this.openSpotsIndices = getOpenSpots();
     }

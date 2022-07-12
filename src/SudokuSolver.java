@@ -6,60 +6,38 @@ public class SudokuSolver {
 
     public static void main(String[] args) {
 //
-        SudokuBoard board = new SudokuBoard(9);
-
+        SudokuBoard board = new SudokuBoard();
         SudokuSolver solver = new SudokuSolver();
-//        ArrayList<Integer> tester = solver.getBlock(8, board);
-//
-//        boolean testy = solver.isValidMove(11, 6, board);
-
-        System.out.println(solver.solveV2(board));
-        System.out.println(solver.getCellValue(80,board));
-        System.out.println(Arrays.deepToString(board.getBoard()).replace("],", "],\n"));
+        solver.solve(board);
     }
 
 
-    private boolean solve(SudokuBoard board) {
 
-        for (int cellIndex = 0; cellIndex < 80; cellIndex++) {
-            for (int numberAttempt = 1; numberAttempt <= 9; numberAttempt++) {
-                if (isValidMove(cellIndex, numberAttempt, board)) {
-                    board.setCellValue(cellIndex, numberAttempt);
-
-                    if (solve(board)) {
-                        return true;
-                    } else {
-                        board.setCellValue(cellIndex, 0);
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean solveV2(SudokuBoard board){
+    private boolean solve(SudokuBoard board){
         for (int everyCellIndex = 0; everyCellIndex <= 80 ; everyCellIndex++) {
             if (getCellValue(everyCellIndex,board) == 0){
-                System.out.println("Cell: " + everyCellIndex + " is empty.");
+//                System.out.println("Cell: " + everyCellIndex + " is empty.");
 
                 for (int numberAttempt = 1; numberAttempt <= 9; numberAttempt++) {
                     if (isValidMove(everyCellIndex,numberAttempt,board)){
-                        System.out.println("Valid move found at index: " + everyCellIndex + " with value: " + numberAttempt);
+//                        System.out.println("Valid move found at index: " + everyCellIndex + " with value: " + numberAttempt);
                         board.setCellValue(everyCellIndex,numberAttempt);
 
-                        if (solveV2(board)){
+                        if (solve(board)){
                             return true;
                         } else{
-                            System.out.println("Setting cell:" + everyCellIndex + " back to 0");
+//                            System.out.println("Setting cell:" + everyCellIndex + " back to 0");
                             board.setCellValue(everyCellIndex,0);
                         }
                     }
                 }
-                System.out.println("Could not find a valid number for cell:" + everyCellIndex);
+//                System.out.println("Could not find a valid number for cell:" + everyCellIndex);
                 return false;
             }
 
         }
+        System.out.println("SOLVED YOUR SUDOKU BOARD:");
+        System.out.println(Arrays.deepToString(board.getBoard()).replace("],", "],\n"));
         return true;
     }
 
