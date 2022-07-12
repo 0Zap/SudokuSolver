@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class SudokuSolver {
@@ -8,20 +9,68 @@ public class SudokuSolver {
         SudokuBoard board = new SudokuBoard(9);
 
         SudokuSolver solver = new SudokuSolver();
-        ArrayList<Integer> tester = solver.getBlock(8, board);
+//        ArrayList<Integer> tester = solver.getBlock(8, board);
+//
+//        boolean testy = solver.isValidMove(11, 6, board);
 
-        boolean testy = solver.isValidMove(11,6,board);
-        System.out.println(testy);
+        System.out.println(solver.solveV2(board));
+        System.out.println(solver.getCellValue(80,board));
+        System.out.println(Arrays.deepToString(board.getBoard()).replace("],", "],\n"));
     }
 
 
-    private boolean isValidMove(int cellIndex, int cellValue, SudokuBoard board){
-        ArrayList<Integer> columnValues = getColumn(cellIndex,board);
-        ArrayList<Integer> rowValues = getRow(cellIndex,board);
-        ArrayList<Integer> blockValues = getBlock(cellIndex,board);
-        ArrayList<Integer> validMoves = board.getOpenSpotsIndices();
+    private boolean solve(SudokuBoard board) {
 
-        return (!blockValues.contains(cellValue) && !rowValues.contains(cellValue) && !columnValues.contains(cellValue) && validMoves.contains(cellIndex));
+        for (int cellIndex = 0; cellIndex < 80; cellIndex++) {
+            for (int numberAttempt = 1; numberAttempt <= 9; numberAttempt++) {
+                if (isValidMove(cellIndex, numberAttempt, board)) {
+                    board.setCellValue(cellIndex, numberAttempt);
+
+                    if (solve(board)) {
+                        return true;
+                    } else {
+                        board.setCellValue(cellIndex, 0);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean solveV2(SudokuBoard board){
+        for (int everyCellIndex = 0; everyCellIndex <= 80 ; everyCellIndex++) {
+            if (getCellValue(everyCellIndex,board) == 0){
+                System.out.println("Cell: " + everyCellIndex + " is empty.");
+
+                for (int numberAttempt = 1; numberAttempt <= 9; numberAttempt++) {
+                    if (isValidMove(everyCellIndex,numberAttempt,board)){
+                        System.out.println("Valid move found at index: " + everyCellIndex + " with value: " + numberAttempt);
+                        board.setCellValue(everyCellIndex,numberAttempt);
+
+                        if (solveV2(board)){
+                            return true;
+                        } else{
+                            System.out.println("Setting cell:" + everyCellIndex + " back to 0");
+                            board.setCellValue(everyCellIndex,0);
+                        }
+                    }
+                }
+                System.out.println("Could not find a valid number for cell:" + everyCellIndex);
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+
+    private boolean isValidMove(int cellIndex, int cellValue, SudokuBoard board) {
+        ArrayList<Integer> columnValues = getColumn(cellIndex, board);
+        ArrayList<Integer> rowValues = getRow(cellIndex, board);
+        ArrayList<Integer> blockValues = getBlock(cellIndex, board);
+        ArrayList<Integer> emptySpots = board.getOpenSpotsIndices();
+
+        return (!blockValues.contains(cellValue) && !rowValues.contains(cellValue) && !columnValues.contains(cellValue) && emptySpots.contains(cellIndex));
 
     }
 
@@ -197,6 +246,11 @@ public class SudokuSolver {
         return board.getBoard()[row][col];
     }
 
+    private int getCellValue(int index, SudokuBoard board) {
+        HashMap<Integer, ArrayList<Integer>> info = board.getIndexInfo();
+        ArrayList<Integer> rowColInfo = info.get(index);
+        return board.getBoard()[rowColInfo.get(0)][rowColInfo.get(1)];
+    }
 
 
 }

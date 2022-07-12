@@ -76,4 +76,12 @@ public class SudokuBoard {
         };
         return board;
     }
+
+    public void setCellValue(int index, int value){
+        ArrayList<Integer> rowColInfo = indexInfo.get(index);
+        int row = rowColInfo.get(0);
+        int col = rowColInfo.get(1);
+
+        this.board[row][col] = value;
+    }
 }
